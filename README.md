@@ -1,4 +1,4 @@
-# DUET: Dual-Paradigm Adaptive Expert Triage with Cellular Inductive Prior for Accurate Spatial Transcriptomics Prediction
+# DUET: Dual-Paradigm Adaptive Expert Triage with Single-cell Inductive Prior for Spatial Transcriptomics Prediction
 
 ## Repository Structure
 
