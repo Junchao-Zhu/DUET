@@ -218,10 +218,6 @@ def evaluate_regression(model, val_loader, device):
     }
 
 
-# ---------------------------------------------------------------------------
-# Full evaluation (both branches)
-# ---------------------------------------------------------------------------
-
 @torch.no_grad()
 def evaluate_slide(
     model, val_loader, device,
@@ -945,9 +941,6 @@ def run_fold(args, fold_idx):
     start_time = time.time()
     total_epochs = args.stage1_epochs + args.stage2_epochs
 
-    # ===================================================================
-    # Stage 1: BLEEP (DenseNet-121 + GeneEncoder)
-    # ===================================================================
     logging.info(f"\n{'='*70}")
     logging.info("STAGE 1: Training DenseNet-121 + GeneEncoder (BLEEP contrastive)")
     logging.info(f"  Temperature: {args.temperature}, Projection: {args.projection_dim}")
@@ -1064,9 +1057,6 @@ def run_fold(args, fold_idx):
     os.remove(best_stage1_path)
     logging.info("BLEEP branch frozen.")
 
-    # ===================================================================
-    # Stage 2: Regression (ViT-B + RegressionHead)
-    # ===================================================================
     logging.info(f"\n{'='*70}")
     logging.info("STAGE 2: Training ViT-B (CONCH) + RegressionHead (MSE)")
     if args.lambda_ret > 0:
@@ -1199,7 +1189,6 @@ def run_fold(args, fold_idx):
                 logging.info(f"  Early stopping at epoch {global_epoch} (patience={args.patience})")
                 break
 
-    # Load best Stage 2 and freeze regression
     logging.info(f"\nLoading best Stage 2 (Reg PCC: {best_reg_pcc:.4f})")
     ckpt = torch.load(best_stage2_path, map_location=device)
     model.reg_encoder.load_state_dict(ckpt['reg_encoder'])
@@ -1208,9 +1197,6 @@ def run_fold(args, fold_idx):
     os.remove(best_stage2_path)
     logging.info("Regression branch frozen.")
 
-    # ===================================================================
-    # Stage 3: Soft Mixing
-    # ===================================================================
     logging.info(f"\n{'='*70}")
     logging.info("STAGE 3: Training soft mixing -- all variants")
     logging.info(f"{'='*70}")
